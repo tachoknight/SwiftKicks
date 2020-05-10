@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SwiftCurses",
+        "repositoryURL": "https://github.com/tachoknight/SwiftCurses",
+        "state": {
+          "branch": null,
+          "revision": "0a20c4db6d298b039bd3218b197fbab02e318035",
+          "version": "0.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
