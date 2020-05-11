@@ -1,4 +1,4 @@
-import Ccurses
+import SwiftCurses
 
 // This is a test program for raw ncurses->swift functionality. This program will
 // change as the need arises to test out something. It does nothing useful but display
