@@ -1,11 +1,18 @@
-import SwiftCurses
+#if canImport(Darwin)
+import Darwin
+import SwiftCursesMac
+#else
+import Glibc
+import SwiftCursesLinux
+#endif
+
 
 // This is a test program for raw ncurses->swift functionality. This program will
 // change as the need arises to test out something. It does nothing useful but display
 // some random text copied from various *.wikipedia.org front pages as well as emojis
 //
 // to run:
-//  swift run -Xcc -DNCURSES_WIDECHAR -Xcc -DCURSES_NEED_WIDE -Xcc -DCURSES_NEED_NCURSES
+//   swift run -Xcc -DNCURSES_WIDECHAR -Xcc -DCURSES_NEED_WIDE -Xcc -DCURSES_NEED_NCURSES -Xcc -D_XOPEN_SOURCE_EXTENDED
 //
 // Note that the defines are necessary becaue otherwise mvwaddwstr will not be defined
 // from ncurses.h (also, you may notice that, if your editor of choice is configured to
@@ -25,6 +32,17 @@ extension String {
 
 // Create a new ncurses window handle. Window handles are necessary for 
 // working with the wide versions of the addstr family of functions
+// We break out the function between macOS and Linux because they both
+// have different ways of returning a WINDOW handle
+#if canImport(Darwin)
+func create_newwin(height: Int, width: Int, starty: Int, startx: Int) -> Optional<OpaquePointer> {
+    let my_win = newwin(Int32(height), Int32(width), Int32(starty), Int32(startx))
+    box(my_win, 0, 0)
+    wrefresh(my_win)
+
+    return my_win
+}
+#else
 func create_newwin(height: Int, width: Int, starty: Int, startx: Int) -> UnsafeMutablePointer<WINDOW>? {
     let my_win = newwin(Int32(height), Int32(width), Int32(starty), Int32(startx))
     box(my_win, 0, 0)
@@ -32,6 +50,8 @@ func create_newwin(height: Int, width: Int, starty: Int, startx: Int) -> UnsafeM
 
     return my_win
 }
+#endif
+
 
 // This is necessary to get the emojis et al to show correctly
 setlocale(LC_ALL, "")
